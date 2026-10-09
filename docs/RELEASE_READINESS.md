@@ -17,8 +17,9 @@ The decision covers local Lore workflows against the published C library for int
 | Base | This repository was created empty. There is no upstream base branch and no pull request. |
 | Implementation commit | `864cf3880a37088d5da082138394fd349024d91f` |
 | CI fix commit | `caded6b5298ba0aea32e95c44488601422a7a4bd` |
+| Report commit | `315839f56213a6adaa528bc5d3b33c00955c5d38` |
 | Pull request | Not created. The branch is the repository's initial history, not a review against an existing project. |
-| State | BRANCH PUSHED. CI VERIFIED for `caded6b`. Not AWAITING MAINTAINER REVIEW. Not MERGED. |
+| State | BRANCH PUSHED. CI VERIFIED. Not AWAITING MAINTAINER REVIEW. Not MERGED. |
 
 The first Actions run, https://github.com/swap/lore-rs/actions/runs/37913536786, failed on `windows-latest` because `cargo fmt --all -- --check` rejected CRLF checkouts (`Incorrect newline style`). `ubuntu-latest` in that run passed, including integration tests. `.gitattributes` forces LF. The rerun is the verified one.
 
@@ -31,7 +32,7 @@ Verified CI: https://github.com/swap/lore-rs/actions/runs/37913699235
 
 The integration step runs `cargo test --tests`, which on this Cargo also runs the library tests, then `tests/shutdown.rs` (1) and `tests/workflow.rs` (4). Both jobs downloaded the Lore v0.10.1 library (`lore.dll` on Windows, `liblore.so` on Ubuntu) and set `LORE_USE_SERVICE=0`.
 
-This document is committed after that run. The Actions run for the documentation commit is a separate check of the same tree plus this file.
+The report commit `315839f56213a6adaa528bc5d3b33c00955c5d38` was checked at https://github.com/swap/lore-rs/actions/runs/37913996759. Conclusion: `success`. Both `windows-latest` and `ubuntu-latest` passed format, clippy, unit tests, doc tests, and integration tests. The commit that records this paragraph is documentation only.
 
 AI assistance: a Cursor agent drafted this crate. Layouts were taken from an MSVC build of the Lore 0.10.1 header, and the commands below were executed. No `Signed-off-by` line was added. Lore's DCO applies to `EpicGames/lore`, and this commit is not one of those.
 
@@ -117,5 +118,6 @@ Still open, none critical or high:
 
 - `864cf38` added the crate: 24 files, 2918 insertions
 - `caded6b` added `.gitattributes`: 1 file, 1 insertion
+- `315839f` added this file
 
-This file is not in that commit.
+The commit that records the report's own CI run only edits this file.
