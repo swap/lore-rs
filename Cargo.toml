@@ -1,0 +1,23 @@
+[package]
+name = "lore-sdk"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "MIT"
+description = "Community Rust SDK for local workflows in the Lore version control system"
+readme = "README.md"
+repository = "https://github.com/swap/lore-rs"
+keywords = ["lore", "version-control", "vcs"]
+categories = ["api-bindings", "development-tools"]
+exclude = ["docs/RELEASE_READINESS.md", ".github/"]
+
+[dependencies]
+libloading = "0.8"
+tempfile = "3.21"
+thiserror = "2"
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "warn"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }

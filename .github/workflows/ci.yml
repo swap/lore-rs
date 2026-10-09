@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: format
+        run: cargo fmt --all -- --check
+      - name: clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: unit tests
+        run: cargo test --lib
+      - name: doc tests
+        run: cargo test --doc
+      - name: download Lore 0.10.1 library
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            asset="liblore-v0.10.1-x86_64-pc-windows-msvc.zip"
+          else
+            asset="liblore-v0.10.1-x86_64-unknown-linux-gnu.tar.gz"
+          fi
+          curl -fsSL -o lore-lib.archive "https://github.com/EpicGames/lore/releases/download/v0.10.1/${asset}"
+          mkdir -p lore-lib
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            unzip -q lore-lib.archive -d lore-lib
+            dll=$(cygpath -w "$PWD/lore-lib/lore.dll")
+            echo "LORE_LIBRARY=${dll}" >> "$GITHUB_ENV"
+          else
+            tar -xzf lore-lib.archive -C lore-lib
+            lib=$(find lore-lib -name 'liblore.so' -print -quit)
+            echo "LORE_LIBRARY=${lib}" >> "$GITHUB_ENV"
+          fi
+      - name: integration tests
+        run: cargo test --tests
+        env:
+          LORE_USE_SERVICE: "0"
